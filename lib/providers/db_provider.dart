@@ -8,8 +8,8 @@ export 'package:lector_qr_sqllite/models/scan_models.dart';
 
 class DBProvider {
   //estrutura de un singleton
-  static late Database _database;
-  static late final DBProvider db = DBProvider._();
+  static Database _database;
+  static final DBProvider db = DBProvider._();
   DBProvider._();
 
 //procedimiento geter verifica si ya hay algo el la database o la inicializa
@@ -89,5 +89,34 @@ class DBProvider {
     SELECT * FROM Scans WHERE tipo = '$tipo'    
     ''');
     return res.isNotEmpty ? res.map((s) => ScanModel.fromJson(s)).toList() : [];
+  }
+
+//actualizar la base de datos
+  Future<int?> updateScan(ScanModel nuevoScan) async {
+    final db = await database;
+    final res = await db.update('Scans', nuevoScan.toJson(),
+        where: 'id = ?', whereArgs: [nuevoScan.id]);
+    //si no se pone la condicion where se va a actualizar toda la base de datos.
+    return res;
+  }
+
+  Future<int?> deleteScan(int id) async {
+    final db = await database;
+    //si solo se deja el 'scans' sin el where se borra toda la base de datos
+    final res = await db.delete('Scans', where: 'id = ?', whereArgs: [id]);
+    return res;
+  }
+
+  Future<int?> deleteAllScan() async {
+    final db = await database;
+    //esta forma es más rapida
+    // final res = await db.delete('Scans');
+    // return res;
+
+    //otra forma
+    final res = await db.rawDelete('''
+    DELETE FROM Scans
+    ''');
+    return res;
   }
 }

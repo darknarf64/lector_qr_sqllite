@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:lector_qr_sqllite/providers/scan_list_provider.dart';
+import 'package:provider/provider.dart';
 
 class ScanButton extends StatelessWidget {
   @override
@@ -11,7 +13,10 @@ class ScanButton extends StatelessWidget {
         // String barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
         //     '#3D8BEF', 'Cancelar', false, ScanMode.QR);
         final barcodeScanRes = 'https://nutriapps.blogspot.pe';
-        print(barcodeScanRes);
+        final scanListProvider =
+            Provider.of<ScanListProvider>(context, listen: false);
+        scanListProvider.nuevoScan(barcodeScanRes);
+        scanListProvider.nuevoScan('geo:12,25.15,25');
       },
     );
   }
