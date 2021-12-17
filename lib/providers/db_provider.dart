@@ -8,17 +8,17 @@ export 'package:lector_qr_sqllite/models/scan_models.dart';
 
 class DBProvider {
   //estrutura de un singleton
-  static Database _database;
+  static Database? _database;
   static final DBProvider db = DBProvider._();
   DBProvider._();
 
 //procedimiento geter verifica si ya hay algo el la database o la inicializa
   Future<Database> get database async {
-    if (_database != null) return _database;
+    if (_database != null) return _database!;
 
     _database = await initDB();
 
-    return _database;
+    return _database!;
   }
 
   Future<Database> initDB() async {
@@ -36,7 +36,7 @@ class DBProvider {
       onOpen: (db) {},
       onCreate: (Database db, int version) async {
         await db.execute('''
-          CREAT TABLE Scans(
+          CREATE TABLE Scans(
             id INTEGER PRIMARY KEY,
             tipo TEXT,
             valor TEXT
@@ -64,7 +64,7 @@ class DBProvider {
 //otra forma de crear un nuevo raw
   Future<int> nuevoScan(ScanModel nuevoScan) async {
     final db = await database;
-    final res = await db.insert('Scan', nuevoScan.toJson());
+    final res = await db.insert('Scans', nuevoScan.toJson());
 
     //el res es el ID del último registro insertado
     return res;
