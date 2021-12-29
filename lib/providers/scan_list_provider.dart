@@ -8,7 +8,8 @@ class ScanListProvider extends ChangeNotifier {
   String tipoSeleccionado = 'http';
 
 //metodo para que se inserte un nuevo valor
-  nuevoScan(String valor) async {
+//al inicio no regresaba nada. luego se cambio por el util creado
+  Future<ScanModel> nuevoScan(String valor) async {
     final nuevoScans = new ScanModel(valor: valor);
     final id = await DBProvider.db.nuevoScan(nuevoScans);
     //el nuevoScan asigna un id
@@ -20,6 +21,8 @@ class ScanListProvider extends ChangeNotifier {
       this.scans.add(nuevoScans);
       notifyListeners();
     }
+    //esta parte se añadió luego de crear el utils
+    return nuevoScans;
   }
 
   // metodo para cargar scans
@@ -47,7 +50,7 @@ class ScanListProvider extends ChangeNotifier {
   //metodo para borrar scans por id
   borrarScansporID(int id) async {
     await DBProvider.db.deleteScan(id);
-    cargarScansporTipo(this.tipoSeleccionado);
+    //cargarScansporTipo(this.tipoSeleccionado);
     // notifyListeners(); ya no va porque cargarScansportipo ya lo llama
   }
 }
